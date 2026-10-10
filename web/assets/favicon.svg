@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124">
+  <!-- Icono del logo oficial (reformas-barcelona-logo.svg) -->
+  <rect x="0" y="0" width="124" height="124" rx="26" fill="#C4552D"/>
+  <path d="M24 62 L62 30 L100 62" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M36 58 V96 H88 V58" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linejoin="round"/>
+  <rect x="54" y="72" width="16" height="24" rx="2" fill="#FFFFFF"/>
+</svg>

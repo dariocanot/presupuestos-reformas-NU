@@ -1,0 +1,11 @@
+{
+  "nombre": "Marta Puig",
+  "email": "marta.puig@ejemplo.com",
+  "telefono": "",
+  "direccion": "Carrer de Provença, 210, 3º 2ª, Barcelona",
+  "estancia": "bano",
+  "m2": 6,
+  "calidad": "media",
+  "extras": ["demolicion", "fontaneria"],
+  "descripcion": "Quiero cambiar la bañera por un plato de ducha grande y poner un mueble con dos lavabos. El baño tiene unos 30 años y las tuberías son las originales."
+}

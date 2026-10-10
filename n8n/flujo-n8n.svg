@@ -1,0 +1,423 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="2995" viewBox="0 0 1760 2995" font-family="Manrope, system-ui, sans-serif" fill="#2A2A2A">
+<title>Flujo de n8n · Presupuestos de Reformas Barcelona</title>
+<desc>Mapa del flujo de n8n: nodos, orden, configuración clave y observaciones de cada uno.</desc>
+<defs>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;display=swap');
+text { font-family: Manrope, system-ui, sans-serif; }
+.h1 { font-size: 28px; font-weight: 800; }
+.h2 { font-size: 22px; font-weight: 800; }
+.h3 { font-size: 19px; font-weight: 800; }
+.sub { font-size: 15px; }
+.node { font-size: 15px; font-weight: 700; }
+.num { font-size: 12px; font-weight: 800; }
+.num2 { font-size: 15px; font-weight: 800; }
+.small { font-size: 12.5px; }
+.txt { font-size: 13.5px; }
+.obs { fill: #4A4440; }
+.label { font-size: 11.5px; font-weight: 800; letter-spacing: 1.2px; }
+.bold { font-weight: 700; }
+</style>
+<marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#2A2A2A"/></marker>
+<marker id="flechaTer" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C4552D"/></marker>
+<marker id="flechaErr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#B03A2E"/></marker>
+<marker id="flechaOpc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7A7570"/></marker>
+<marker id="flechaIa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#6B4FA0"/></marker>
+</defs>
+<rect width="1760" height="2995" fill="#F6F1EA"/>
+<rect x="0" y="0" width="1760" height="112" fill="#2A2A2A"/>
+<rect x="40" y="28" width="56" height="56" rx="12" fill="#C4552D"/>
+<path d="M68 42 L52 56 V72 H63 V63 H73 V72 H84 V56 Z" fill="#FFFFFF"/>
+<text x="116" y="56" class="h1" fill="#FFFFFF">Flujo de n8n · Presupuestos de Reformas Barcelona</text>
+<text x="116" y="84" class="sub" fill="#D8CFC4">Qué nodos montar, en qué orden, qué configurar en cada uno y en qué fijarse. Fuentes: CLAUDE.md y README.md.</text>
+<rect x="30" y="136" width="1700" height="58" rx="10" fill="#F3DDD3" stroke="#C4552D" stroke-width="1.5"/>
+<text x="54" y="161" class="bold" fill="#C4552D">REGLA DE ORO</text>
+<text x="54" y="182" class="txt">Los importes los calcula n8n con código determinista ANTES de llamar a la IA. La IA solo redacta texto: no recibe importes y no se usa ningún número que devuelva. La web nunca envía precios.</text>
+<text x="30" y="230" class="h2" fill="#C4552D">1 · Vista general del flujo</text>
+<rect x="30" y="246" width="1700" height="420" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<rect x="46" y="350" width="112" height="96" rx="10" fill="#2A2A2A"/>
+<text x="102" y="386" class="node" text-anchor="middle" fill="#FFFFFF">WEB</text>
+<text x="102" y="406" class="small" text-anchor="middle" fill="#D8CFC4">Formulario</text>
+<text x="102" y="422" class="small" text-anchor="middle" fill="#D8CFC4">(Vercel)</text>
+<g>
+<rect x="200" y="356" width="166" height="84" rx="10" fill="#F3DDD3" stroke="#C4552D" stroke-width="2"/>
+<circle cx="216" cy="372" r="11" fill="#C4552D"/>
+<text x="216" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">1</text>
+<text x="283" y="400" class="node" text-anchor="middle" fill="#2A2A2A">Webhook</text>
+<text x="283" y="428" class="small" text-anchor="middle" fill="#C4552D">POST /presupuesto</text>
+</g>
+<g>
+<rect x="394" y="356" width="166" height="84" rx="10" fill="#E3E7EC" stroke="#3E4A59" stroke-width="2"/>
+<circle cx="410" cy="372" r="11" fill="#3E4A59"/>
+<text x="410" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">2</text>
+<text x="477" y="400" class="node" text-anchor="middle" fill="#2A2A2A">Validar datos</text>
+<text x="477" y="428" class="small" text-anchor="middle" fill="#3E4A59">Code</text>
+</g>
+<g>
+<rect x="588" y="356" width="166" height="84" rx="10" fill="#F6EAD3" stroke="#B7791F" stroke-width="2"/>
+<circle cx="604" cy="372" r="11" fill="#B7791F"/>
+<text x="604" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">3</text>
+<text x="671" y="400" class="node" text-anchor="middle" fill="#2A2A2A">¿Datos válidos?</text>
+<text x="671" y="428" class="small" text-anchor="middle" fill="#B7791F">IF</text>
+</g>
+<g>
+<rect x="782" y="356" width="166" height="84" rx="10" fill="#E3E7EC" stroke="#3E4A59" stroke-width="2"/>
+<circle cx="798" cy="372" r="11" fill="#3E4A59"/>
+<text x="798" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">4</text>
+<text x="865" y="392" class="node" text-anchor="middle" fill="#2A2A2A">Calcular</text>
+<text x="865" y="410" class="node" text-anchor="middle" fill="#2A2A2A">presupuesto</text>
+<text x="865" y="428" class="small" text-anchor="middle" fill="#3E4A59">Code · importes</text>
+</g>
+<g>
+<rect x="976" y="356" width="166" height="84" rx="10" fill="#E9E3F3" stroke="#6B4FA0" stroke-width="2"/>
+<circle cx="992" cy="372" r="11" fill="#6B4FA0"/>
+<text x="992" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">5</text>
+<text x="1059" y="400" class="node" text-anchor="middle" fill="#2A2A2A">Redactar textos</text>
+<text x="1059" y="428" class="small" text-anchor="middle" fill="#6B4FA0">IA · LLM Chain</text>
+</g>
+<g>
+<rect x="1170" y="356" width="166" height="84" rx="10" fill="#E3E7EC" stroke="#3E4A59" stroke-width="2"/>
+<circle cx="1186" cy="372" r="11" fill="#3E4A59"/>
+<text x="1186" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">6</text>
+<text x="1253" y="392" class="node" text-anchor="middle" fill="#2A2A2A">Verificar</text>
+<text x="1253" y="410" class="node" text-anchor="middle" fill="#2A2A2A">textos IA</text>
+<text x="1253" y="428" class="small" text-anchor="middle" fill="#3E4A59">Code · fallback</text>
+</g>
+<g>
+<rect x="1364" y="356" width="166" height="84" rx="10" fill="#E3E7EC" stroke="#3E4A59" stroke-width="2"/>
+<circle cx="1380" cy="372" r="11" fill="#3E4A59"/>
+<text x="1380" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">7</text>
+<text x="1447" y="400" class="node" text-anchor="middle" fill="#2A2A2A">Montar respuesta</text>
+<text x="1447" y="428" class="small" text-anchor="middle" fill="#3E4A59">Code / Set</text>
+</g>
+<g>
+<rect x="1558" y="356" width="166" height="84" rx="10" fill="#F3DDD3" stroke="#C4552D" stroke-width="2"/>
+<circle cx="1574" cy="372" r="11" fill="#C4552D"/>
+<text x="1574" y="376.5" class="num" text-anchor="middle" fill="#FFFFFF">8</text>
+<text x="1641" y="392" class="node" text-anchor="middle" fill="#2A2A2A">Responder</text>
+<text x="1641" y="410" class="node" text-anchor="middle" fill="#2A2A2A">presupuesto</text>
+<text x="1641" y="428" class="small" text-anchor="middle" fill="#C4552D">Respond · 200</text>
+</g>
+<path d="M158 398 L196 398" fill="none" stroke="#C4552D" stroke-width="2" marker-end="url(#flechaTer)"/>
+<text x="179" y="386" class="small bold" text-anchor="middle" fill="#C4552D">POST</text>
+<path d="M366 398 L390 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<path d="M560 398 L584 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<path d="M754 398 L778 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<path d="M948 398 L972 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<path d="M1142 398 L1166 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<path d="M1336 398 L1360 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<path d="M1530 398 L1554 398" fill="none" stroke="#2A2A2A" stroke-width="2" marker-end="url(#flecha)"/>
+<text x="768" y="386" class="small bold" text-anchor="middle" fill="#2F7D4F">true</text>
+<path d="M1641 356 L1641 298 L102 298 L102 346" fill="none" stroke="#C4552D" stroke-width="2" marker-end="url(#flechaTer)"/>
+<rect x="522" y="285" width="660" height="26" rx="13" fill="#FFFFFF"/>
+<text x="852" y="303" class="small bold" text-anchor="middle" fill="#C4552D">JSON 200 { ok: true, partidas, subtotal, iva, total, textos… } → la web pinta el presupuesto</text>
+<text x="52" y="276" class="small" fill="#6B6560">La web espera la respuesta en la MISMA petición (timeout 30 s).</text>
+<path d="M671 440 L671 556 L778 556" fill="none" stroke="#B03A2E" stroke-width="2" marker-end="url(#flechaErr)"/>
+<text x="681" y="464" class="small bold" text-anchor="start" fill="#B03A2E">false</text>
+<rect x="782" y="526" width="360" height="60" rx="10" fill="#F6DEDB" stroke="#B03A2E" stroke-width="2"/>
+<circle cx="798" cy="542" r="11" fill="#B03A2E"/><text x="798" y="546.5" class="num" text-anchor="middle" fill="#FFFFFF">9</text>
+<text x="970" y="553" class="node" text-anchor="middle" fill="#2A2A2A">Responder error</text>
+<text x="970" y="572" class="small" text-anchor="middle" fill="#B03A2E">Respond · 400 / 500 · { ok: false, error }</text>
+<path d="M782 572 L102 572 L102 450" fill="none" stroke="#B03A2E" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#flechaErr)"/>
+<text x="110" y="566" class="small bold" text-anchor="start" fill="#B03A2E">mensaje claro</text>
+<path d="M1059 440 C 1059 480, 1253 480, 1253 446" fill="none" stroke="#6B4FA0" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#flechaIa)"/>
+<text x="1156" y="490" class="small bold" text-anchor="middle" fill="#6B4FA0">si la IA falla → error output</text>
+<text x="1156" y="506" class="small bold" text-anchor="middle" fill="#6B4FA0">(textos por defecto)</text>
+<path d="M1641 440 L1641 522" fill="none" stroke="#7A7570" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#flechaOpc)"/>
+<path d="M1641 462 L1447 462 L1447 522" fill="none" stroke="#7A7570" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#flechaOpc)"/>
+<g>
+<rect x="1364" y="526" width="166" height="60" rx="10" fill="#ECE8E3" stroke="#7A7570" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="1447" y="554" class="node" text-anchor="middle" fill="#2A2A2A">Registrar en Sheets</text>
+<text x="1447" y="574" class="small" text-anchor="middle" fill="#7A7570">opcional</text>
+</g>
+<g>
+<rect x="1558" y="526" width="166" height="60" rx="10" fill="#ECE8E3" stroke="#7A7570" stroke-width="2" stroke-dasharray="6 4"/>
+<text x="1641" y="554" class="node" text-anchor="middle" fill="#2A2A2A">Enviar por Gmail</text>
+<text x="1641" y="574" class="small" text-anchor="middle" fill="#7A7570">opcional</text>
+</g>
+<text x="1354" y="608" class="small" fill="#6B6560">Después de responder: nunca retrasan ni rompen la respuesta.</text>
+<text x="50" y="644" class="small bold" fill="#6B6560">LEYENDA</text>
+<rect x="130" y="632" width="16" height="16" rx="4" fill="#F3DDD3" stroke="#C4552D" stroke-width="2"/>
+<text x="154" y="644" class="small" fill="#2A2A2A">Entrada / salida HTTP</text>
+<rect x="329" y="632" width="16" height="16" rx="4" fill="#E3E7EC" stroke="#3E4A59" stroke-width="2"/>
+<text x="353" y="644" class="small" fill="#2A2A2A">Code (JavaScript)</text>
+<rect x="500" y="632" width="16" height="16" rx="4" fill="#F6EAD3" stroke="#B7791F" stroke-width="2"/>
+<text x="524" y="644" class="small" fill="#2A2A2A">Lógica (IF)</text>
+<rect x="629" y="632" width="16" height="16" rx="4" fill="#E9E3F3" stroke="#6B4FA0" stroke-width="2"/>
+<text x="653" y="644" class="small" fill="#2A2A2A">IA (solo textos)</text>
+<rect x="793" y="632" width="16" height="16" rx="4" fill="#ECE8E3" stroke="#7A7570" stroke-width="2"/>
+<text x="817" y="644" class="small" fill="#2A2A2A">Opcional</text>
+<rect x="901" y="632" width="16" height="16" rx="4" fill="#F6DEDB" stroke="#B03A2E" stroke-width="2"/>
+<text x="925" y="644" class="small" fill="#2A2A2A">Rama de error</text>
+<text x="30" y="716" class="h2" fill="#C4552D">2 · Nodo a nodo: claves de configuración y observaciones</text>
+<rect x="30" y="734" width="838" height="379" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M30 746 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#F3DDD3"/>
+<rect x="30" y="734" width="6" height="379" rx="3" fill="#C4552D"/>
+<circle cx="66" cy="760" r="15" fill="#C4552D"/>
+<text x="66" y="765.5" class="num2" text-anchor="middle" fill="#FFFFFF">1</text>
+<text x="92" y="767" class="h3" fill="#2A2A2A">Webhook</text>
+<text x="848" y="766" class="small bold" text-anchor="end" fill="#C4552D">Webhook</text>
+<text x="54" y="814" class="label" fill="#C4552D">CLAVES</text>
+<text x="58" y="836" class="txt" fill="#C4552D">•</text>
+<text x="74" y="836" class="txt">HTTP Method: POST · Path: presupuesto → https://&lt;tu-espacio&gt;.app.n8n.cloud/webhook/presupuesto</text>
+<text x="58" y="859" class="txt" fill="#C4552D">•</text>
+<text x="74" y="859" class="txt">Respond: Using 'Respond to Webhook' Node (si no, n8n contesta solo y la web no recibe el presupuesto).</text>
+<text x="58" y="882" class="txt" fill="#C4552D">•</text>
+<text x="74" y="882" class="txt">Options → Allowed Origins (CORS): la URL de Vercel. «*» solo mientras pruebas.</text>
+<text x="58" y="905" class="txt" fill="#C4552D">•</text>
+<text x="74" y="905" class="txt">Los datos llegan en {{ $json.body }}: nombre, email, telefono, direccion, estancia, m2, calidad, extras[],</text>
+<text x="74" y="924" class="txt">descripcion.</text>
+<line x1="54" y1="943" x2="844" y2="943" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="54" y="961" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="57" y="983" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="983" class="txt obs">La web usa SIEMPRE la Production URL con el workflow ACTIVO. La Test URL solo funciona mientras pulsas</text>
+<text x="74" y="1002" class="txt obs">«Listen for test event».</text>
+<text x="57" y="1025" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="1025" class="txt obs">Pega la Production URL en web/config.js (constante WEBHOOK_URL); no la repitas en otro sitio.</text>
+<text x="57" y="1048" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="1048" class="txt obs">Para probar sin web: curl con el cuerpo de n8n/ejemplo-peticion.json (caso Marta Puig).</text>
+<rect x="892" y="734" width="838" height="379" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M892 746 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#E3E7EC"/>
+<rect x="892" y="734" width="6" height="379" rx="3" fill="#3E4A59"/>
+<circle cx="928" cy="760" r="15" fill="#3E4A59"/>
+<text x="928" y="765.5" class="num2" text-anchor="middle" fill="#FFFFFF">2</text>
+<text x="954" y="767" class="h3" fill="#2A2A2A">Validar datos</text>
+<text x="1710" y="766" class="small bold" text-anchor="end" fill="#3E4A59">Code (JavaScript)</text>
+<text x="916" y="814" class="label" fill="#3E4A59">CLAVES</text>
+<text x="920" y="836" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="836" class="txt">Lee $json.body y recorta espacios (trim) de todos los textos.</text>
+<text x="920" y="859" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="859" class="txt">Obligatorios: nombre, email (formato válido), estancia, m2, calidad. Teléfono, dirección, extras y</text>
+<text x="936" y="878" class="txt">descripción son opcionales.</text>
+<text x="920" y="901" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="901" class="txt">estancia ∈ bano · cocina · salon · dormitorio · vivienda — calidad ∈ basica · media · alta.</text>
+<text x="920" y="924" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="924" class="txt">extras: solo slugs válidos, sin duplicados (new Set). Si no llega, [].</text>
+<text x="920" y="947" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="947" class="txt">m2: Number(m2) &gt; 0 y ≤ 500; acepta decimales (7.5).</text>
+<text x="920" y="970" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="970" class="txt">Limita longitudes: descripcion ≤ 1000 caracteres; nombre y dirección ≤ ~150.</text>
+<text x="920" y="993" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="993" class="txt">Devuelve { valido: true|false, error: "…", datos: { …limpios } }.</text>
+<line x1="916" y1="1012" x2="1706" y2="1012" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="916" y="1030" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="919" y="1052" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1052" class="txt obs">Valida en el servidor aunque la web ya valide: el webhook es público y cualquiera puede llamarlo.</text>
+<text x="919" y="1075" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1075" class="txt obs">No lances excepciones: devuelve valido:false para que el IF lo mande a la rama 400.</text>
+<text x="919" y="1098" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1098" class="txt obs">Mensajes en español y de tú, sin jerga: «Indica los metros cuadrados de la estancia».</text>
+<rect x="30" y="1137" width="838" height="440" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M30 1149 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#F6EAD3"/>
+<rect x="30" y="1137" width="6" height="440" rx="3" fill="#B7791F"/>
+<circle cx="66" cy="1163" r="15" fill="#B7791F"/>
+<text x="66" y="1168.5" class="num2" text-anchor="middle" fill="#FFFFFF">3</text>
+<text x="92" y="1170" class="h3" fill="#2A2A2A">¿Datos válidos?</text>
+<text x="848" y="1169" class="small bold" text-anchor="end" fill="#B7791F">IF</text>
+<text x="54" y="1217" class="label" fill="#B7791F">CLAVES</text>
+<text x="58" y="1239" class="txt" fill="#B7791F">•</text>
+<text x="74" y="1239" class="txt">Condición: {{ $json.valido }} — Boolean — is true.</text>
+<text x="58" y="1262" class="txt" fill="#B7791F">•</text>
+<text x="74" y="1262" class="txt">Salida true → «Calcular presupuesto».</text>
+<text x="58" y="1285" class="txt" fill="#B7791F">•</text>
+<text x="74" y="1285" class="txt">Salida false → «Responder error» (código 400).</text>
+<line x1="54" y1="1304" x2="844" y2="1304" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="54" y="1322" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="57" y="1344" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="1344" class="txt obs">Separar validar (Code) y decidir (IF) hace que en la reunión se vea a simple vista dónde se bifurca el flujo.</text>
+<text x="57" y="1367" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="1367" class="txt obs">Alternativa válida: un Switch si quieres distinguir varios tipos de error; con IF basta.</text>
+<rect x="892" y="1137" width="838" height="440" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M892 1149 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#E3E7EC"/>
+<rect x="892" y="1137" width="6" height="440" rx="3" fill="#3E4A59"/>
+<circle cx="928" cy="1163" r="15" fill="#3E4A59"/>
+<text x="928" y="1168.5" class="num2" text-anchor="middle" fill="#FFFFFF">4</text>
+<text x="954" y="1170" class="h3" fill="#2A2A2A">Calcular presupuesto</text>
+<text x="1710" y="1169" class="small bold" text-anchor="end" fill="#3E4A59">Code (JavaScript)</text>
+<text x="916" y="1217" class="label" fill="#3E4A59">CLAVES</text>
+<text x="920" y="1239" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1239" class="txt">Un único objeto CONFIG al principio: TARIFAS[estancia][calidad], EXTRAS (en el orden de la tabla, con tipo</text>
+<text x="936" y="1258" class="txt">«m2» o «fijo»), PLAZOS, CONDICIONES, IVA = 21 y etiquetas con tildes.</text>
+<text x="920" y="1281" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1281" class="txt">Copia exacta de README / Excel (si discrepan, manda el Excel). La web NO contiene precios.</text>
+<text x="920" y="1304" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1304" class="txt">Calcula en CÉNTIMOS enteros: Math.round(m2 × tarifa × 100). Divide entre 100 solo al final.</text>
+<text x="920" y="1327" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1327" class="txt">Extra por m² → cantidad = m², unidad «m²». Extra fijo → cantidad 1, unidad «ud.».</text>
+<text x="920" y="1350" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1350" class="txt">subtotal = Σ importes · iva = Math.round(subtotal × 21 / 100) · total = subtotal + iva.</text>
+<text x="920" y="1373" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1373" class="txt">Orden de partidas: la estancia primero, luego los extras en el orden de la tabla (no en el que llegan).</text>
+<text x="920" y="1396" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1396" class="txt">Concepto estancia: «Reforma de {estancia en minúsculas} · calidad {calidad}» → «Reforma de baño · calidad</text>
+<text x="936" y="1415" class="txt">media».</text>
+<text x="920" y="1438" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1438" class="txt">Añade: titulo, plazo, condiciones, fecha (AAAA-MM-DD) y numero (P-2026-0001).</text>
+<line x1="916" y1="1457" x2="1706" y2="1457" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="916" y="1475" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="919" y="1497" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1497" class="txt obs">Aquí nacen TODOS los números, antes de la IA. Salen como números (6690, 1404.9), nunca como texto formateado.</text>
+<text x="919" y="1520" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1520" class="txt obs">Caso Marta Puig: 5.280 + 210 + 1.200 = 6.690 € · IVA 1.404,90 € · Total 8.094,90 € · plazo 2–3 semanas.</text>
+<text x="919" y="1543" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1543" class="txt obs">Numeración: contador en $getWorkflowStaticData('global') (solo persiste en ejecuciones de producción) o en</text>
+<text x="936" y="1562" class="txt obs">Google Sheets.</text>
+<rect x="30" y="1601" width="838" height="451" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M30 1613 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#E9E3F3"/>
+<rect x="30" y="1601" width="6" height="451" rx="3" fill="#6B4FA0"/>
+<circle cx="66" cy="1627" r="15" fill="#6B4FA0"/>
+<text x="66" y="1632.5" class="num2" text-anchor="middle" fill="#FFFFFF">5</text>
+<text x="92" y="1634" class="h3" fill="#2A2A2A">Redactar textos</text>
+<text x="848" y="1633" class="small bold" text-anchor="end" fill="#6B4FA0">Basic LLM Chain + Chat Model</text>
+<text x="54" y="1681" class="label" fill="#6B4FA0">CLAVES</text>
+<text x="58" y="1703" class="txt" fill="#6B4FA0">•</text>
+<text x="74" y="1703" class="txt">Modelo pequeño: OpenAI gpt-4.1-mini (créditos gratis de n8n) o Google Gemini Flash. Temperatura ≈ 0.4.</text>
+<text x="58" y="1726" class="txt" fill="#6B4FA0">•</text>
+<text x="74" y="1726" class="txt">Require Specific Output Format + Structured Output Parser: { saludo: string, resumen: string, trabajos:</text>
+<text x="74" y="1745" class="txt">string[4–8] }.</text>
+<text x="58" y="1768" class="txt" fill="#6B4FA0">•</text>
+<text x="74" y="1768" class="txt">Se le pasa: nombre, estancia, m², calidad + qué incluye esa calidad, extras elegidos (nombre + descripción) y</text>
+<text x="74" y="1787" class="txt">la descripción del cliente.</text>
+<text x="58" y="1810" class="txt" fill="#6B4FA0">•</text>
+<text x="74" y="1810" class="txt">Prompt versionado en n8n/prompt.md: tono cercano y profesional, de tú, español de España; prohibido hablar de</text>
+<text x="74" y="1829" class="txt">precios.</text>
+<text x="58" y="1852" class="txt" fill="#6B4FA0">•</text>
+<text x="74" y="1852" class="txt">Los trabajos reflejan lo pedido, los extras y la calidad, y terminan con «Limpieza final de la obra.».</text>
+<text x="58" y="1875" class="txt" fill="#6B4FA0">•</text>
+<text x="74" y="1875" class="txt">Descripción del cliente delimitada (p. ej. &lt;descripcion_cliente&gt;…&lt;/descripcion_cliente&gt;) y tratada como</text>
+<text x="74" y="1894" class="txt">DATOS, no instrucciones.</text>
+<line x1="54" y1="1913" x2="844" y2="1913" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="54" y="1931" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="57" y="1953" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="1953" class="txt obs">NO recibe importes: así no puede inventarlos ni cambiarlos.</text>
+<text x="57" y="1976" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="1976" class="txt obs">No puede prometer extras no contratados. Si lo pedido encaja con un extra no marcado, lo sugiere en el</text>
+<text x="74" y="1995" class="txt obs">resumen.</text>
+<text x="57" y="2018" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="2018" class="txt obs">Settings → On Error: «Continue (using error output)» y Retry On Fail. La salida de error va también a</text>
+<text x="74" y="2037" class="txt obs">«Verificar textos IA».</text>
+<rect x="892" y="1601" width="838" height="451" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M892 1613 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#E3E7EC"/>
+<rect x="892" y="1601" width="6" height="451" rx="3" fill="#3E4A59"/>
+<circle cx="928" cy="1627" r="15" fill="#3E4A59"/>
+<text x="928" y="1632.5" class="num2" text-anchor="middle" fill="#FFFFFF">6</text>
+<text x="954" y="1634" class="h3" fill="#2A2A2A">Verificar textos IA</text>
+<text x="1710" y="1633" class="small bold" text-anchor="end" fill="#3E4A59">Code (JavaScript)</text>
+<text x="916" y="1681" class="label" fill="#3E4A59">CLAVES</text>
+<text x="920" y="1703" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1703" class="txt">Si la IA falló o el JSON no es válido → textos por defecto con plantilla.</text>
+<text x="920" y="1726" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1726" class="txt">Comprueba tipos: saludo y resumen, strings no vacíos; trabajos, array de 4–8 strings (recorta si sobran).</text>
+<text x="920" y="1749" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1749" class="txt">Asegura que el último trabajo sea «Limpieza final de la obra.» (lo añade si falta).</text>
+<text x="920" y="1772" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1772" class="txt">Ignora cualquier número o campo extra que devuelva la IA.</text>
+<text x="920" y="1795" class="txt" fill="#3E4A59">•</text>
+<text x="936" y="1795" class="txt">Recupera el cálculo con $('Calcular presupuesto').item.json.</text>
+<line x1="916" y1="1814" x2="1706" y2="1814" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="916" y="1832" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="919" y="1854" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1854" class="txt obs">Garantía: el cliente SIEMPRE recibe su presupuesto, aunque la IA caiga o tarde.</text>
+<text x="919" y="1877" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="1877" class="txt obs">Plantilla: «Hola {nombre}:» · «Muchas gracias por contactar con Reformas Barcelona. Te enviamos el</text>
+<text x="936" y="1896" class="txt obs">presupuesto para la reforma de tu {estancia}…».</text>
+<rect x="30" y="2076" width="838" height="283" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M30 2088 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#E3E7EC"/>
+<rect x="30" y="2076" width="6" height="283" rx="3" fill="#3E4A59"/>
+<circle cx="66" cy="2102" r="15" fill="#3E4A59"/>
+<text x="66" y="2107.5" class="num2" text-anchor="middle" fill="#FFFFFF">7</text>
+<text x="92" y="2109" class="h3" fill="#2A2A2A">Montar respuesta</text>
+<text x="848" y="2108" class="small bold" text-anchor="end" fill="#3E4A59">Code o Edit Fields (Set)</text>
+<text x="54" y="2156" class="label" fill="#3E4A59">CLAVES</text>
+<text x="58" y="2178" class="txt" fill="#3E4A59">•</text>
+<text x="74" y="2178" class="txt">Construye exactamente el contrato: ok, numero, fecha, cliente{nombre, email, telefono, direccion}, titulo,</text>
+<text x="74" y="2197" class="txt">textos{saludo, resumen, trabajos}.</text>
+<text x="58" y="2220" class="txt" fill="#3E4A59">•</text>
+<text x="74" y="2220" class="txt">partidas[]: { concepto, cantidad, unidad, precioUnitario, importe } + subtotal, iva, ivaPorcentaje (21),</text>
+<text x="74" y="2239" class="txt">total.</text>
+<text x="58" y="2262" class="txt" fill="#3E4A59">•</text>
+<text x="74" y="2262" class="txt">plazo y condiciones[{ titulo, detalle }] vienen de CONFIG, nunca de la IA.</text>
+<line x1="54" y1="2281" x2="844" y2="2281" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="54" y="2299" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="57" y="2321" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="2321" class="txt obs">Si cambia el contrato, se cambia a la vez en web/app.js, en el flujo y en CLAUDE.md.</text>
+<text x="57" y="2344" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="2344" class="txt obs">Importes con 2 decimales como máximo; el formato «8.094,90 €» lo pone la web.</text>
+<rect x="892" y="2076" width="838" height="283" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M892 2088 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#F3DDD3"/>
+<rect x="892" y="2076" width="6" height="283" rx="3" fill="#C4552D"/>
+<circle cx="928" cy="2102" r="15" fill="#C4552D"/>
+<text x="928" y="2107.5" class="num2" text-anchor="middle" fill="#FFFFFF">8</text>
+<text x="954" y="2109" class="h3" fill="#2A2A2A">Responder presupuesto</text>
+<text x="1710" y="2108" class="small bold" text-anchor="end" fill="#C4552D">Respond to Webhook</text>
+<text x="916" y="2156" class="label" fill="#C4552D">CLAVES</text>
+<text x="920" y="2178" class="txt" fill="#C4552D">•</text>
+<text x="936" y="2178" class="txt">Respond With: JSON → {{ $json }} (o First Incoming Item).</text>
+<text x="920" y="2201" class="txt" fill="#C4552D">•</text>
+<text x="936" y="2201" class="txt">Response Code: 200.</text>
+<text x="920" y="2224" class="txt" fill="#C4552D">•</text>
+<text x="936" y="2224" class="txt">Si da guerra el CORS: Response Headers → Access-Control-Allow-Origin = URL de Vercel.</text>
+<line x1="916" y1="2243" x2="1706" y2="2243" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="916" y="2261" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="919" y="2283" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="2283" class="txt obs">Es el único nodo que devuelve el presupuesto a la web: sin él la petición se queda colgada hasta el timeout.</text>
+<text x="919" y="2306" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="2306" class="txt obs">Todo lo que vaya después (Gmail, Sheets) ya no retrasa al cliente.</text>
+<rect x="30" y="2383" width="838" height="264" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M30 2395 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#F6DEDB"/>
+<rect x="30" y="2383" width="6" height="264" rx="3" fill="#B03A2E"/>
+<circle cx="66" cy="2409" r="15" fill="#B03A2E"/>
+<text x="66" y="2414.5" class="num2" text-anchor="middle" fill="#FFFFFF">9</text>
+<text x="92" y="2416" class="h3" fill="#2A2A2A">Responder error</text>
+<text x="848" y="2415" class="small bold" text-anchor="end" fill="#B03A2E">Respond to Webhook</text>
+<text x="54" y="2463" class="label" fill="#B03A2E">CLAVES</text>
+<text x="58" y="2485" class="txt" fill="#B03A2E">•</text>
+<text x="74" y="2485" class="txt">Response Code: 400 (datos no válidos) · 500 (fallo interno).</text>
+<text x="58" y="2508" class="txt" fill="#B03A2E">•</text>
+<text x="74" y="2508" class="txt">Body: { "ok": false, "error": "Revisa los metros cuadrados: deben ser un número mayor que 0." }</text>
+<text x="58" y="2531" class="txt" fill="#B03A2E">•</text>
+<text x="74" y="2531" class="txt">Mensaje en español, de tú y sin jerga técnica.</text>
+<line x1="54" y1="2550" x2="844" y2="2550" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="54" y="2568" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="57" y="2590" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="2590" class="txt obs">La web muestra el mensaje sin borrar lo que el cliente ya escribió.</text>
+<text x="57" y="2613" class="txt bold" fill="#C4552D">!</text>
+<text x="74" y="2613" class="txt obs">Para el 500: conecta las salidas de error de los nodos Code a un segundo Respond to Webhook con ok:false.</text>
+<rect x="892" y="2383" width="838" height="264" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<path d="M892 2395 a12 12 0 0 1 12 -12 h814 a12 12 0 0 1 12 12 v40 h-838 z" fill="#ECE8E3"/>
+<rect x="892" y="2383" width="6" height="264" rx="3" fill="#7A7570"/>
+<circle cx="928" cy="2409" r="15" fill="#7A7570"/>
+<text x="928" y="2414.5" class="num2" text-anchor="middle" fill="#FFFFFF">10</text>
+<text x="954" y="2416" class="h3" fill="#2A2A2A">Gmail · Google Sheets</text>
+<text x="1710" y="2415" class="small bold" text-anchor="end" fill="#7A7570">Opcionales</text>
+<text x="916" y="2463" class="label" fill="#7A7570">CLAVES</text>
+<text x="920" y="2485" class="txt" fill="#7A7570">•</text>
+<text x="936" y="2485" class="txt">Se conectan DESPUÉS de «Responder presupuesto» (o en paralelo), nunca antes.</text>
+<text x="920" y="2508" class="txt" fill="#7A7570">•</text>
+<text x="936" y="2508" class="txt">Gmail: envía el presupuesto en HTML al email del cliente (con copia al gerente).</text>
+<text x="920" y="2531" class="txt" fill="#7A7570">•</text>
+<text x="936" y="2531" class="txt">Google Sheets → Append Row: fecha, número, cliente, email, estancia, m², calidad, extras, total.</text>
+<text x="920" y="2554" class="txt" fill="#7A7570">•</text>
+<text x="936" y="2554" class="txt">On Error: Continue → si fallan, no rompen nada.</text>
+<line x1="916" y1="2573" x2="1706" y2="2573" stroke="#D9CFC3" stroke-dasharray="3 3"/>
+<text x="916" y="2591" class="label" fill="#6B6560">OBSERVACIONES</text>
+<text x="919" y="2613" class="txt bold" fill="#C4552D">!</text>
+<text x="936" y="2613" class="txt obs">Credenciales OAuth solo dentro de n8n: el export n8n/workflow.json no debe contener claves, tokens ni IDs de</text>
+<text x="936" y="2632" class="txt obs">credenciales.</text>
+<text x="30" y="2697" class="h2" fill="#C4552D">3 · Antes de la reunión</text>
+<rect x="30" y="2715" width="1700" height="240" rx="12" fill="#FFFFFF" stroke="#D9CFC3"/>
+<rect x="54" y="2736" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2751" class="txt"><tspan class="bold">Workflow ACTIVO:</tspan> y su Production URL pegada en web/config.js.</text>
+<rect x="54" y="2766" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2781" class="txt"><tspan class="bold">CORS:</tspan> Allowed Origins = URL de Vercel (quita el «*» de pruebas).</text>
+<rect x="54" y="2796" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2811" class="txt"><tspan class="bold">Caso Marta Puig:</tspan> baño · 6 m² · media · demolición + fontanería → total 8.094,90 € · 2–3 semanas.</text>
+<rect x="54" y="2826" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2841" class="txt"><tspan class="bold">Más pruebas:</tspan> sin extras · 7,5 m² con extras por m² · todos los extras · obligatorios vacíos (400) · webhook caído.</text>
+<rect x="54" y="2856" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2871" class="txt"><tspan class="bold">IA caída:</tspan> desconecta la credencial: el presupuesto debe salir igual con los textos por defecto.</text>
+<rect x="54" y="2886" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2901" class="txt"><tspan class="bold">Presentación:</tspan> nodos con nombre en español y una Sticky Note por bloque (Entrada · Validación · Cálculo · IA · Respuesta).</text>
+<rect x="54" y="2916" width="18" height="18" rx="4" fill="none" stroke="#C4552D" stroke-width="2"/>
+<text x="86" y="2931" class="txt"><tspan class="bold">Exportar:</tspan> a n8n/workflow.json y revisa que NO lleve claves, tokens ni IDs de credenciales. Prompt en n8n/prompt.md.</text>
+</svg>
