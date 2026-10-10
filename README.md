@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Presupuestos con IA · Reformas Barcelona
 
 Caso práctico de las prácticas en **NU Automatiza**: una web y un flujo de **n8n** que generan al momento los presupuestos de reforma que hoy la empresa hace a mano.
@@ -296,3 +297,6 @@ Los datos de contacto y el enlace para reservar la reunión están en la última
 | [`Contexto/reformas-barcelona-datos.xlsx`](Contexto/reformas-barcelona-datos.xlsx) | Datos de la empresa: tarifas, extras, plazos, condiciones, colores y un ejemplo de cálculo. |
 | [`Contexto/reformas-barcelona-presupuesto-ejemplo.pdf`](Contexto/reformas-barcelona-presupuesto-ejemplo.pdf) | Un presupuesto real hecho a mano. Es el resultado que tiene que salir. |
 | `reformas-barcelona-logo` (.svg y .png) | El logo en color y en blanco. Lo menciona el enunciado, pero **todavía no está en el repositorio**. |
+=======
+# presupuestos-reformas-NU
+>>>>>>> b0c5d1be2cdee093cf647e8be09274a97aa5ebd5
