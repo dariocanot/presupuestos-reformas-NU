@@ -38,6 +38,7 @@ web/                  frontend estático (se despliega en Vercel)
 n8n/
   workflow.json       export del flujo, SIN credenciales
   prompt.md           prompt de la IA, versionado aparte para poder leerlo
+  prompt-constructor-n8n.md  prompt para que el AI Builder de n8n monte el flujo (incluye el código de los nodos)
   ejemplo-peticion.json  cuerpo de ejemplo que envía la web al webhook (caso Marta Puig)
   flujo-n8n.svg     mapa del flujo: nodos, configuración clave y observaciones
 ```
