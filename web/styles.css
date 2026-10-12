@@ -345,6 +345,34 @@ fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
   .extra__popover { left: 1rem; right: 1rem; bottom: 1rem; width: auto; }
 }
 
+/* Estancias: una o varias en la misma solicitud. Con una sola no se nota el bloque. */
+.estancias { display: grid; gap: 1.25rem; }
+.bloque-estancia { display: grid; gap: 2.25rem; }
+.estancias--varias .bloque-estancia {
+  padding: 1.25rem 1rem 1.5rem;
+  border: 1.5px solid var(--color-linea); border-radius: var(--radio-control);
+}
+@media (min-width: 640px) { .estancias--varias .bloque-estancia { padding: 1.5rem; } }
+.bloque-estancia__cabecera {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  margin-bottom: -0.75rem; padding-bottom: 0.875rem; border-bottom: 1px solid var(--color-linea);
+}
+.bloque-estancia__titulo { font-size: var(--texto-l); font-weight: 800; color: var(--color-primario-oscuro); }
+.bloque-estancia__titulo:focus-visible { box-shadow: none; text-decoration: underline; }
+.bloque-estancia__quitar {
+  display: inline-flex; align-items: center; gap: 0.35rem; flex: none; min-height: 44px; padding: 0.4rem 0.9rem;
+  font: inherit; font-size: var(--texto-s); font-weight: 700; color: var(--color-texto-suave);
+  background: transparent; border: 1.5px solid var(--color-linea-fuerte); border-radius: 999px; cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+}
+.bloque-estancia__quitar svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+.bloque-estancia__quitar:hover { color: var(--color-error); border-color: var(--color-error); background: var(--color-error-fondo); }
+.bloque-estancia__quitar:focus-visible { border-radius: 999px; }
+
+.anadir-estancia { display: grid; gap: 0.5rem; justify-items: start; margin-top: -1rem; }
+.anadir-estancia svg { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+@media (max-width: 479px) { .anadir-estancia .boton { width: 100%; } }
+
 /* Campos de texto */
 .campo { display: grid; gap: 0.4rem; }
 .campo > label { font-weight: 700; }
@@ -488,6 +516,11 @@ input:focus-visible, textarea:focus-visible { border-color: var(--color-primario
 }
 .p-tabla td { padding: 0.75rem; border-bottom: 1px solid var(--color-linea); vertical-align: top; }
 .p-tabla .num { text-align: right; white-space: nowrap; }
+/* Cabecera de cada estancia cuando el presupuesto tiene varias */
+.p-tabla .p-grupo th {
+  background: transparent; color: var(--color-primario-oscuro); font-weight: 800;
+  padding-top: 1.25rem; border-bottom: 1px solid var(--color-linea-fuerte);
+}
 
 .p-totales {
   display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 2.5rem;
@@ -508,6 +541,8 @@ input:focus-visible, textarea:focus-visible { border-color: var(--color-primario
     padding: 0.75rem 0; border-bottom: 1px solid var(--color-linea);
   }
   .p-tabla td { display: block; padding: 0; border: 0; }
+  .p-tabla tr.p-grupo { display: block; padding: 1.25rem 0 0.4rem; }
+  .p-tabla .p-grupo th { display: block; padding: 0; border: 0; }
   .p-tabla td:nth-child(1) { grid-area: concepto; }
   .p-tabla td:nth-child(2) { grid-area: cantidad; text-align: left; }
   .p-tabla td:nth-child(3) { grid-area: precio; text-align: left; }
@@ -559,6 +594,6 @@ input:focus-visible, textarea:focus-visible { border-color: var(--color-primario
   .hoja { box-shadow: none; padding: 0; border-radius: 0; }
   .hoja--presupuesto { animation: none !important; }
   .p-tabla tr, .p-totales, .p-firma { break-inside: avoid; }
-  .p-seccion h3 { break-after: avoid; }
+  .p-seccion h3, .p-grupo { break-after: avoid; }
   a { color: inherit; text-decoration: none; }
 }

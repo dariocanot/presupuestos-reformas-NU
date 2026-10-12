@@ -41,6 +41,7 @@ n8n/
   prompt-constructor-n8n.md  prompt para que el AI Builder de n8n monte el flujo (incluye el código de los nodos)
   ejemplo-peticion.json  cuerpo de ejemplo que envía la web al webhook (caso Marta Puig)
   flujo-n8n.svg     mapa del flujo: nodos, configuración clave y observaciones
+  boceto-flujo-n8n.pdf  esquema a mano de cada nodo y sus chequeos de seguridad (para la reunión)
 ```
 
 Si se cambia esta estructura, actualiza esta sección.
@@ -70,9 +71,15 @@ Es la interfaz entre las dos partes. Si cambia, se cambia a la vez en `web/app.j
   "m2": 6,
   "calidad": "media",
   "extras": ["demolicion", "fontaneria"],
+  "estancias": [
+    { "estancia": "bano", "m2": 6, "calidad": "media", "extras": ["demolicion", "fontaneria"] }
+  ],
   "descripcion": "Quiero cambiar la bañera por un plato de ducha grande…"
 }
 ```
+
+- **Varias estancias:** `estancias` lleva de 1 a 5 estancias, cada una con su `estancia`, `m2`, `calidad` y `extras`. La vivienda completa va siempre sola (ya incluye todas las estancias): la web lo impide y el flujo responde 400.
+- **Compatibilidad:** la web repite la primera estancia en los campos sueltos `estancia`, `m2`, `calidad` y `extras`. El flujo usa `estancias` si viene y, si no, esos campos. Así el `curl` de abajo y un flujo antiguo siguen funcionando con una estancia.
 
 Identificadores fijos (slugs sin tildes; las etiquetas visibles van con tildes):
 
@@ -111,6 +118,7 @@ Identificadores fijos (slugs sin tildes; las etiquetas visibles van con tildes):
 ```
 
 - Los importes viajan como **números** (euros, máximo 2 decimales), nunca como cadenas formateadas. El formato es cosa de la web.
+- Con varias estancias, cada partida lleva además `"grupo"` («Baño», «Cocina»; «Baño 1» y «Baño 2» si se repite), y la web pinta una fila de cabecera por grupo. Con una sola estancia no se envía `grupo` y la respuesta es idéntica a la de siempre. Si la web pide varias estancias y ninguna partida trae `grupo`, muestra un error en vez de un total incompleto.
 - `condiciones` y `plazo` los pone el flujo a partir de las tablas, no la IA.
 
 ### Respuesta de error (`400` o `500`)
@@ -155,7 +163,8 @@ Total    = subtotal + IVA
 ```
 
 - Calcula en **céntimos enteros** y redondea a 2 decimales solo al final, para evitar errores de coma flotante.
-- Orden de las partidas: primero la estancia, después los extras en el orden de la tabla de extras.
+- Orden de las partidas: primero la estancia, después los extras en el orden de la tabla de extras. Con varias estancias se repite el bloque por cada una, en el orden en que las pidió el cliente.
+- Varias estancias: el título las nombra todas («Presupuesto de reforma de baño y cocina», «… de 2 baños y dormitorio»), el plazo es la **suma** de los plazos de cada estancia (baño + cocina = 5–7 semanas) y la **gestión de licencia se cobra una sola vez** por obra aunque se marque en varias estancias.
 - Concepto de la estancia: `Reforma de {estancia en minúsculas} · calidad {calidad}` (p. ej. «Reforma de baño · calidad media»). Los extras usan su nombre tal cual de la tabla.
 - Tarifas, extras, plazos y condiciones: copia exacta de [README.md](README.md) / Excel, en un único objeto de configuración al principio del nodo Code (o una Google Sheet).
 
@@ -201,6 +210,7 @@ Al terminar cambios, exporta el workflow a [n8n/workflow.json](n8n/workflow.json
 ### Formulario
 
 - Campos, obligatoriedad y valores exactamente como la tabla del [README](README.md#1--web-frontend). Etiquetas en español con tildes; los `value` son los slugs del contrato.
+- Cada estancia es un bloque clonado de `<template id="plantilla-estancia">`, con ids y names numerados (`estancia-1`, `m2-1`, `extras-1`…). «Añadir otra estancia» llega hasta 5; con un solo bloque no se ven ni su cabecera ni el botón «Quitar».
 - Estancia y calidad: controles visuales y fáciles de pulsar (tarjetas o radios grandes), con una breve explicación de qué incluye cada calidad.
 - Extras como casillas con su descripción corta. **No** muestres precios en el formulario (salen en el presupuesto calculado).
 - Cada campo con `<label>` asociado, `type` correcto (`email`, `tel`, `number` con `min`, `step`), `autocomplete` y `required` donde toque.
@@ -264,7 +274,7 @@ Antes de dar algo por terminado, prueba el **caso de Marta Puig** del README (ba
 | IVA (21 %) | 1.404,90 € |
 | **Total** | **8.094,90 €** |
 
-Plazo: 2–3 semanas. Además prueba al menos: un caso sin extras, uno con extras por m² con decimales en los m² (p. ej. 7,5 m²), uno con todos los extras, un envío con campos obligatorios vacíos y uno con el webhook caído.
+Plazo: 2–3 semanas. Además prueba al menos: un caso sin extras, uno con extras por m² con decimales en los m² (p. ej. 7,5 m²), uno con todos los extras, un envío con campos obligatorios vacíos, uno con el webhook caído y uno con **varias estancias**. Para este último usa baño 6 m² media (demolición, fontanería, licencia) + cocina 10 m² alta (electricidad, licencia), que debe dar subtotal 22.540 €, IVA 4.733,40 €, total 27.273,40 € y plazo 5–7 semanas, con la licencia una sola vez.
 
 Comprobación rápida del webhook:
 
