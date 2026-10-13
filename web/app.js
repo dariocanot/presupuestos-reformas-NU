@@ -226,7 +226,7 @@
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  // Solo se aceptan proveedores de correo habituales; si el dominio se parece a uno, se sugiere.
+  // Se acepta cualquier dominio bien escrito; si se parece a un proveedor habitual, se sugiere la corrección.
   const DOMINIOS_EMAIL = [
     'gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.es', 'outlook.com', 'outlook.es',
     'live.com', 'live.es', 'msn.com', 'yahoo.com', 'yahoo.es', 'icloud.com', 'me.com',
@@ -246,8 +246,18 @@
     return previa[b.length];
   }
 
-  // "gmal.com" → "gmail.com" · "empresa.cat" → null
+  // Erratas típicas de ".com"; cualquier otra terminación se da por buena (.es, .cat, .de, .fr…).
+  const ERRATAS_COM = ['con', 'cmo', 'ocm', 'vom', 'xom', 'cpm', 'co', 'om', 'comm'];
+
+  // "gmal.com" → "gmail.com" · "gmail.con" → "gmail.com" · "gmx.de" → null · "empresa.cat" → null
   function sugerirDominio(dominio) {
+    const punto = dominio.lastIndexOf('.');
+    const nombre = dominio.slice(0, punto);
+    const terminacion = dominio.slice(punto + 1);
+    const proveedorConocido = DOMINIOS_EMAIL.some((d) => d.slice(0, d.lastIndexOf('.')) === nombre);
+    // Mismo proveedor con otra terminación real (yahoo.fr, live.it): no es una errata.
+    if (proveedorConocido && !ERRATAS_COM.includes(terminacion)) return null;
+
     let mejor = null;
     let minima = 3;
     for (const d of DOMINIOS_EMAIL) {
@@ -294,7 +304,7 @@
       if (DOMINIOS_EMAIL.includes(dominio)) return '';
       const sugerido = sugerirDominio(dominio);
       if (sugerido) return `¿Querías decir ${v.slice(0, arroba)}@${sugerido}? Revisa cómo está escrito el email.`;
-      return 'Usa un email de un proveedor habitual (Gmail, Hotmail, Outlook, Yahoo, iCloud…).';
+      return '';
     }
   };
 
