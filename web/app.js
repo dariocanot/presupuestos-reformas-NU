@@ -595,7 +595,7 @@
 
       r.plazo ? el('p', { class: 'p-plazo' }, [el('strong', { text: 'Plazo estimado:' }), ` ${r.plazo} desde el inicio de la obra.`]) : null,
 
-      condiciones.length ? el('section', { class: 'p-seccion', 'aria-labelledby': 'p-condiciones' }, [
+      condiciones.length ? el('section', { class: 'p-seccion p-seccion--condiciones', 'aria-labelledby': 'p-condiciones' }, [
         el('h3', { id: 'p-condiciones', text: 'Condiciones' }),
         el('ul', { class: 'p-lista' }, condiciones.map((c) =>
           el('li', null, [el('strong', { text: `${c.titulo}:` }), c.detalle ? ` ${c.detalle}` : '']))

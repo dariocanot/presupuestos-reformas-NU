@@ -612,7 +612,8 @@ input:focus-visible, textarea:focus-visible { border-color: var(--color-primario
   .p-firma { margin-top: 1.25rem; line-height: 1.5; }
   .p-pie { margin-top: 1.25rem; padding-top: 0.6rem; }
 
-  .p-tabla tr, .p-totales, .p-firma, .p-pie { break-inside: avoid; }
+  /* Las condiciones van enteras en la misma hoja: si no caben, pasan juntas a la siguiente */
+  .p-tabla tr, .p-totales, .p-seccion--condiciones, .p-firma, .p-pie { break-inside: avoid; }
   .p-seccion h3, .p-grupo { break-after: avoid; }
   a { color: inherit; text-decoration: none; }
 }
