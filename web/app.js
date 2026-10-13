@@ -226,6 +226,37 @@
 
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+  // Solo se aceptan proveedores de correo habituales; si el dominio se parece a uno, se sugiere.
+  const DOMINIOS_EMAIL = [
+    'gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.es', 'outlook.com', 'outlook.es',
+    'live.com', 'live.es', 'msn.com', 'yahoo.com', 'yahoo.es', 'icloud.com', 'me.com',
+    'protonmail.com', 'proton.me', 'aol.com', 'gmx.com', 'gmx.es', 'telefonica.net'
+  ];
+
+  // Distancia de Levenshtein: cuántas letras hay que cambiar, añadir o quitar para pasar de a a b.
+  function distancia(a, b) {
+    let previa = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const fila = [i];
+      for (let j = 1; j <= b.length; j++) {
+        fila[j] = Math.min(previa[j] + 1, fila[j - 1] + 1, previa[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      }
+      previa = fila;
+    }
+    return previa[b.length];
+  }
+
+  // "gmal.com" → "gmail.com" · "empresa.cat" → null
+  function sugerirDominio(dominio) {
+    let mejor = null;
+    let minima = 3;
+    for (const d of DOMINIOS_EMAIL) {
+      const dist = distancia(dominio, d);
+      if (dist < minima) { minima = dist; mejor = d; }
+    }
+    return mejor;
+  }
+
   // Campos de cada bloque: reciben el número del bloque.
   const validadoresEstancia = {
     estancia(n) {
@@ -257,7 +288,13 @@
     email() {
       const v = form.elements.email.value.trim();
       if (!v) return 'Escribe tu email para poder contactarte.';
-      return EMAIL_RE.test(v) ? '' : 'Revisa el email: parece que le falta algo (por ejemplo, nombre@correo.com).';
+      if (!EMAIL_RE.test(v)) return 'Revisa el email: parece que le falta algo (por ejemplo, nombre@gmail.com).';
+      const arroba = v.lastIndexOf('@');
+      const dominio = v.slice(arroba + 1).toLowerCase();
+      if (DOMINIOS_EMAIL.includes(dominio)) return '';
+      const sugerido = sugerirDominio(dominio);
+      if (sugerido) return `¿Querías decir ${v.slice(0, arroba)}@${sugerido}? Revisa cómo está escrito el email.`;
+      return 'Usa un email de un proveedor habitual (Gmail, Hotmail, Outlook, Yahoo, iCloud…).';
     }
   };
 
@@ -597,8 +634,21 @@
     window.print();
   });
 
+  // Deja el formulario como recién abierto: un solo bloque vacío y sin errores.
+  function reiniciarFormulario() {
+    form.reset();
+    bloques().forEach((b) => b.remove());
+    crearBloque();
+    actualizarBloques();
+    intentoEnvio = false;
+    mostrarError('nombre', '');
+    mostrarError('email', '');
+    avisoEstancias.textContent = '';
+    actualizarContador();
+  }
+
   $('#boton-otro').addEventListener('click', () => {
-    // Se conservan los datos del formulario para poder cambiar solo lo necesario.
+    reiniciarFormulario();
     zonaPresupuesto.hidden = true;
     zonaFormulario.hidden = false;
     document.querySelector('.portada').hidden = false;

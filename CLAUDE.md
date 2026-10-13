@@ -138,6 +138,8 @@ Webhook → Validar datos → Calcular presupuesto (Code) → IA (textos) → Pa
 
 Opcionales al final, en paralelo o después de responder: Gmail (enviar por correo), Google Sheets (registrar solicitud). Nunca deben retrasar ni romper la respuesta a la web.
 
+Implementados así: `Responder presupuesto (200)` ─┬→ `Preparar correo` → `Enviar presupuesto por correo` (Gmail) y └→ `Preparar registro` → `Apuntar en hoja del gerente` (Sheets, *append*, formato `RAW` para que nada de lo que escribe el cliente se interprete como fórmula). Los cuatro nodos llevan *On Error: Continue*. El correo usa los números de la respuesta, nunca recalcula.
+
 ### Configuración
 
 - **Webhook:** método `POST`, *Respond* = `Using 'Respond to Webhook' Node`, *Allowed Origins (CORS)* = URL de Vercel (`*` solo mientras se prueba).

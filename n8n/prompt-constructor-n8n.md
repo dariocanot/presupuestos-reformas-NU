@@ -87,6 +87,8 @@ Error de datos (HTTP 400) o error interno (HTTP 500):
 Webhook presupuesto → Validar datos → ¿Datos válidos? ─ true → Calcular presupuesto → Redactar textos (IA) → Verificar textos IA → Montar respuesta → Responder presupuesto (200)
                                                      └ false → Responder error (400)
 Calcular presupuesto (salida de error) → Responder error interno (500)
+Responder presupuesto (200) ─┬→ Preparar correo → Enviar presupuesto por correo
+                             └→ Preparar registro → Apuntar en hoja del gerente
 ```
 
 1. **Webhook presupuesto** (Webhook)
@@ -121,12 +123,31 @@ Calcular presupuesto (salida de error) → Responder error interno (500)
 
 10. **Responder presupuesto (200)** (Respond to Webhook): Respond With `First Incoming Item`, Response Code `200`.
 
+Después de responder (el nodo Respond to Webhook deja pasar los datos cuando ya ha contestado a la web, así que lo que sigue nunca retrasa ni rompe la respuesta). Los cuatro nodos llevan Settings → On Error: `Continue`.
+
+11. **Preparar correo** (Code): pega el código del apartado 6.5. Monta el correo HTML con los mismos números que ha recibido la web.
+
+12. **Enviar presupuesto por correo** (Gmail → *Send a message*):
+    - Credencial: tu cuenta de Gmail (OAuth2).
+    - To: `{{ $json.para }}` · Subject: `{{ $json.asunto }}` · Email Type: `HTML` · Message: `{{ $json.html }}`
+    - Options → Sender Name: `Reformas Barcelona` · Append n8n Attribution: desactivado.
+    - Settings → Retry On Fail: 1 reintento.
+
+13. **Preparar registro** (Code): pega el código del apartado 6.6. Devuelve una fila con una clave por columna.
+
+14. **Apuntar en hoja del gerente** (Google Sheets → *Append row in sheet*):
+    - Credencial: tu cuenta de Google (OAuth2).
+    - Document: la hoja «Presupuestos · Reformas Barcelona» · Sheet: la primera pestaña.
+    - Mapping Column Mode: `Map Automatically` (las columnas se llaman como las claves del apartado 6.6).
+    - Options → Cell Format: `RAW` (lo que escribe el cliente se guarda como texto y nunca se interpreta como fórmula).
+
 Añade **Sticky Notes** (el flujo se enseña en una reunión) encima de cada bloque:
 
 - «① Entrada y validación: la web envía solo elecciones del cliente, nunca precios. Se valida otra vez en el servidor.»
 - «② Cálculo determinista: tarifas, extras, plazos y condiciones en un único objeto CONFIG. Se calcula en céntimos enteros para evitar errores de coma flotante.»
 - «③ IA solo redacta: recibe estancia, calidad, extras y la descripción del cliente, nunca importes. Si falla o devuelve algo raro, se usan textos de plantilla.»
 - «④ Respuesta: el JSON que pinta la web. Los importes vienen del paso ②, no de la IA.»
+- «⑤ Después de responder: correo al cliente y registro para el gerente. Si fallan, el cliente ya tiene su presupuesto en pantalla.»
 
 ### 5. Prompt *system* para «Redactar textos (IA)»
 
@@ -457,6 +478,190 @@ return [{
 }];
 ```
 
+#### 6.5 Preparar correo
+
+```javascript
+// Correo para el cliente con el mismo presupuesto que ve en la web.
+// Va después de «Responder presupuesto (200)»: los números son los de la respuesta, no se recalcula nada.
+// HTML con estilos en línea (los clientes de correo ignoran las hojas de estilo) y todo el texto escapado.
+const r = $input.first().json;
+
+const WEB = 'https://presupuestosnu.vercel.app';
+const COLOR = {
+  terracota: '#C4552D',       // línea de cabecera y total (texto grande)
+  terracotaOscuro: '#A9461F', // títulos pequeños (contraste AA sobre blanco)
+  texto: '#2A2A2A',
+  suave: '#5E5751',
+  crema: '#F6F1EA',
+  linea: '#E4DACD',
+};
+const FUENTE = "Manrope, 'Segoe UI', Helvetica, Arial, sans-serif";
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const agrupar = (entero) => entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// 1200 → «1.200 €» · 1404.9 → «1.404,90 €» (igual que la web)
+function euros(n) {
+  const centimos = Math.round(n * 100);
+  const [ent, dec] = (Math.abs(centimos) / 100).toFixed(centimos % 100 === 0 ? 0 : 2).split('.');
+  return `${centimos < 0 ? '−' : ''}${agrupar(ent)}${dec ? ',' + dec : ''}&nbsp;€`;
+}
+// 6 → «6» · 7.5 → «7,5»
+const cantidad = (n) => {
+  const [ent, dec] = String(Math.round(n * 100) / 100).split('.');
+  return agrupar(ent) + (dec ? ',' + dec : '');
+};
+const fechaLarga = (iso) => {
+  const [a, m, d] = String(iso).split('-').map(Number);
+  return `${d} de ${MESES[m - 1]} de ${a}`;
+};
+
+const td = `padding:10px 8px;border-bottom:1px solid ${COLOR.linea};vertical-align:top;`;
+const num = `${td}text-align:right;white-space:nowrap;`;
+const titulo2 = (t) => `<h2 style="margin:28px 0 10px;font-size:18px;color:${COLOR.terracotaOscuro};">${esc(t)}</h2>`;
+
+// Partidas, con una fila de cabecera por estancia si hay varias.
+let grupoActual = null;
+const filas = r.partidas.map((p) => {
+  let cabecera = '';
+  if (p.grupo && p.grupo !== grupoActual) {
+    grupoActual = p.grupo;
+    cabecera = `<tr><td colspan="4" style="padding:16px 8px 6px;font-weight:800;color:${COLOR.terracotaOscuro};border-bottom:1px solid ${COLOR.linea};">${esc(p.grupo)}</td></tr>`;
+  }
+  return cabecera + `<tr>
+    <td style="${td}">${esc(p.concepto)}</td>
+    <td style="${num}">${cantidad(p.cantidad)}&nbsp;${esc(p.unidad)}</td>
+    <td style="${num}">${euros(p.precioUnitario)}</td>
+    <td style="${num}">${euros(p.importe)}</td>
+  </tr>`;
+}).join('');
+
+const cliente = [
+  ['Cliente', r.cliente.nombre],
+  ['Email', r.cliente.email],
+  ['Teléfono', r.cliente.telefono],
+  ['Dirección de la obra', r.cliente.direccion],
+].filter(([, v]) => v && String(v).trim())
+  .map(([k, v]) => `<tr><td style="padding:3px 24px 3px 0;font-weight:700;white-space:nowrap;vertical-align:top;">${k}</td><td style="padding:3px 0;">${esc(v)}</td></tr>`)
+  .join('');
+
+const html = `<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${COLOR.crema};">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLOR.crema};">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px;background:#FFFFFF;border-radius:6px;font-family:${FUENTE};font-size:15px;line-height:1.55;color:${COLOR.texto};">
+<tr><td style="padding:28px 28px 32px;">
+
+  <p style="margin:0 0 20px;padding:12px 14px;background:${COLOR.crema};border-radius:6px;font-size:14px;">
+    Aquí tienes el presupuesto que has pedido en nuestra web. Para concertar la visita técnica gratuita, responde a este correo o llámanos al <a href="tel:+34930000000" style="color:${COLOR.terracotaOscuro};font-weight:700;">930 000 000</a>.
+  </p>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom:3px solid ${COLOR.terracota};">
+    <tr>
+      <td style="padding-bottom:16px;vertical-align:middle;">
+        <img src="${WEB}/assets/reformas-barcelona-logo.png" alt="Reformas Barcelona · Reformas integrales desde 1998" height="44" style="display:block;height:44px;width:auto;border:0;">
+      </td>
+      <td style="padding-bottom:16px;text-align:right;font-size:12px;color:${COLOR.suave};line-height:1.6;vertical-align:middle;">
+        Reformas Barcelona, S.L. (empresa ficticia)<br>Carrer de la Reforma, 12, 08005 Barcelona<br>930 000 000 · presupuestos@reformasbarcelona.example
+      </td>
+    </tr>
+  </table>
+
+  <h1 style="margin:24px 0 4px;font-size:24px;line-height:1.2;">${esc(r.titulo)}</h1>
+  <p style="margin:0;color:${COLOR.suave};font-size:14px;">Nº ${esc(r.numero)} · ${fechaLarga(r.fecha)}</p>
+
+  <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:20px;font-size:15px;">${cliente}</table>
+
+  <p style="margin:24px 0 0;">${esc(r.textos.saludo)}</p>
+  <p style="margin:10px 0 0;">${esc(r.textos.resumen)}</p>
+
+  ${titulo2('Descripción de los trabajos')}
+  <ul style="margin:0;padding-left:20px;">${r.textos.trabajos.map((t) => `<li style="margin:0 0 4px;">${esc(t)}</li>`).join('')}</ul>
+
+  ${titulo2('Presupuesto')}
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;border-collapse:collapse;">
+    <tr style="background:${COLOR.crema};">
+      <th align="left" style="padding:10px 8px;border-bottom:2px solid ${COLOR.terracota};">Concepto</th>
+      <th align="right" style="padding:10px 8px;border-bottom:2px solid ${COLOR.terracota};">Cantidad</th>
+      <th align="right" style="padding:10px 8px;border-bottom:2px solid ${COLOR.terracota};">Precio unitario</th>
+      <th align="right" style="padding:10px 8px;border-bottom:2px solid ${COLOR.terracota};">Importe</th>
+    </tr>
+    ${filas}
+  </table>
+  <table role="presentation" cellpadding="0" cellspacing="0" align="right" style="margin-top:16px;font-size:15px;">
+    <tr><td style="padding:3px 32px 3px 0;text-align:right;">Subtotal</td><td style="padding:3px 8px;text-align:right;white-space:nowrap;">${euros(r.subtotal)}</td></tr>
+    <tr><td style="padding:3px 32px 8px 0;text-align:right;border-bottom:1.5px solid ${COLOR.texto};">IVA (${r.ivaPorcentaje}&nbsp;%)</td><td style="padding:3px 8px 8px;text-align:right;white-space:nowrap;border-bottom:1.5px solid ${COLOR.texto};">${euros(r.iva)}</td></tr>
+    <tr><td style="padding:10px 32px 0 0;text-align:right;font-size:20px;font-weight:800;color:${COLOR.terracota};">Total</td><td style="padding:10px 8px 0;text-align:right;white-space:nowrap;font-size:20px;font-weight:800;color:${COLOR.terracota};">${euros(r.total)}</td></tr>
+  </table>
+  <div style="clear:both;"></div>
+
+  <p style="margin:28px 0 0;"><strong>Plazo estimado:</strong> ${esc(r.plazo)} desde el inicio de la obra.</p>
+
+  ${titulo2('Condiciones')}
+  <ul style="margin:0;padding-left:20px;">${r.condiciones.map((c) => `<li style="margin:0 0 4px;"><strong>${esc(c.titulo)}:</strong> ${esc(c.detalle)}</li>`).join('')}</ul>
+
+  <p style="margin:28px 0 0;line-height:1.6;">Un saludo,<br><strong>Jordi Ferrer</strong><br>Gerente · Reformas Barcelona</p>
+
+  <p style="margin:32px 0 0;padding-top:14px;border-top:1px solid ${COLOR.linea};text-align:center;font-size:12px;color:${COLOR.suave};">
+    Reformas Barcelona, S.L. (empresa ficticia) · Carrer de la Reforma, 12, 08005 Barcelona · 930 000 000
+  </p>
+
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+
+return [{
+  json: {
+    para: r.cliente.email,
+    asunto: `Tu presupuesto ${r.numero} · Reformas Barcelona`,
+    html,
+  },
+}];
+```
+
+#### 6.6 Preparar registro
+
+```javascript
+// Una fila por presupuesto para la hoja del gerente.
+// Cada clave es una columna (la fila 1 de la hoja debe tener estos mismos títulos).
+const r = $input.first().json;
+const { datos } = $('Validar datos').first().json;
+const { origenTextos } = $('Verificar textos IA').first().json;
+
+// «Reforma de baño · calidad media · 6 m² (Demolición…, Fontanería nueva) | Reforma de cocina…»
+// Se arma con las partidas ya calculadas, para no repetir aquí las tablas de la empresa.
+const estancias = [];
+for (const p of r.partidas) {
+  if (p.concepto.startsWith('Reforma de ')) {
+    estancias.push({ texto: `${p.concepto} · ${String(p.cantidad).replace('.', ',')} m²`, extras: [] });
+  } else if (estancias.length) {
+    estancias[estancias.length - 1].extras.push(p.concepto);
+  }
+}
+
+return [{
+  json: {
+    'Número': r.numero,
+    'Fecha': r.fecha,
+    'Cliente': r.cliente.nombre,
+    'Email': r.cliente.email,
+    'Teléfono': r.cliente.telefono,
+    'Dirección de la obra': r.cliente.direccion,
+    'Estancias': estancias.map((e) => e.texto + (e.extras.length ? ` (${e.extras.join(', ')})` : '')).join(' | '),
+    'Lo que pide el cliente': datos.descripcion,
+    'Subtotal (€)': r.subtotal,
+    'IVA (€)': r.iva,
+    'Total (€)': r.total,
+    'Plazo': r.plazo,
+    'Textos': origenTextos === 'ia' ? 'IA' : 'Plantilla (la IA falló)',
+    'Estado': 'Pendiente de visita',
+  },
+}];
+```
+
 ### 7. Cómo comprobar que funciona
 
 Con el workflow **activo**, envía la petición del apartado 2 a la Production URL. Debe devolver exactamente:
@@ -488,4 +693,4 @@ Varias estancias: baño 6 m² media (demolición, fontanería, licencia) + cocin
 
 `plazo` = «5–7 semanas». Y vivienda completa junto a otra estancia: debe dar 400.
 
-No añadas Gmail ni Google Sheets por ahora. Si se añaden más adelante, van después de «Responder presupuesto (200)» y nunca deben retrasar ni romper la respuesta a la web.
+Correo y hoja: tras cada presupuesto correcto debe llegar el correo al email del cliente (asunto «Tu presupuesto P-2026-000X · Reformas Barcelona») y aparecer una fila nueva en la hoja del gerente. Si quitas la credencial de Gmail o de Sheets, la web debe seguir recibiendo su presupuesto igual de rápido.

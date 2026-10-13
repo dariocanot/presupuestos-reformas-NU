@@ -585,15 +585,34 @@ input:focus-visible, textarea:focus-visible { border-color: var(--color-primario
    -------------------------------------------------------------------------- */
 
 @media print {
-  @page { size: A4; margin: 14mm 16mm; }
+  @page { size: A4; margin: 12mm 14mm; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body { background: var(--color-papel); font-size: 10.5pt; }
+  html, body { height: auto; }
+  body { background: var(--color-papel); font-size: 10pt; }
   .saltar, .sitio-cabecera, .portada, .pasos-franja, .zona-formulario, .sitio-pie, .no-imprimir { display: none !important; }
   .zona-presupuesto { padding: 0; max-width: none; }
   .contenedor { padding: 0; }
   .hoja { box-shadow: none; padding: 0; border-radius: 0; }
-  .hoja--presupuesto { animation: none !important; }
-  .p-tabla tr, .p-totales, .p-firma { break-inside: avoid; }
+  .hoja--presupuesto { animation: none !important; font-size: inherit; }
+
+  /* Espaciado más compacto que en pantalla: el presupuesto cabe en dos hojas A4 */
+  .p-cabecera { padding-bottom: 0.9rem; }
+  .p-logo { height: 44px; }
+  .p-titulo { margin-top: 1.1rem; }
+  .p-cliente { margin-top: 1rem; gap: 0.2rem 2rem; }
+  .p-saludo { margin-top: 1.1rem; }
+  .p-resumen { margin-top: 0.5rem; }
+  .p-seccion { margin-top: 1.25rem; }
+  .p-seccion h3 { margin-bottom: 0.5rem; }
+  .p-lista { gap: 0.15rem; }
+  .p-tabla th, .p-tabla td { padding: 0.45rem 0.6rem; }
+  .p-tabla .p-grupo th { padding-top: 0.75rem; }
+  .p-totales { margin-top: 0.75rem; gap: 0.3rem 2.5rem; }
+  .p-plazo { margin-top: 1.1rem; }
+  .p-firma { margin-top: 1.25rem; line-height: 1.5; }
+  .p-pie { margin-top: 1.25rem; padding-top: 0.6rem; }
+
+  .p-tabla tr, .p-totales, .p-firma, .p-pie { break-inside: avoid; }
   .p-seccion h3, .p-grupo { break-after: avoid; }
   a { color: inherit; text-decoration: none; }
 }
